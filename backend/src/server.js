@@ -1,3 +1,4 @@
+import "../instrument.js"
 import express from "express";
 import { ENV } from "./config/env.js";
 import { connectDB } from "./config/db.js";
@@ -5,6 +6,8 @@ import { clerkMiddleware } from "@clerk/express";
 import { inngest, functions } from "./config/inngest.js";
 import { serve } from "inngest/express";
 import chatRoutes from "./routes/chat.routes.js";
+import * as Sentry from "@sentry/node";
+
 
 const app = express();
 
@@ -20,7 +23,13 @@ app.get("/", (req, res) => {
 // Inngest setup
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
+app.get("/debug-sentry", (req, res) => {
+  throw new Error("Sentry is configured correctly!");
+});
+
 app.use("/api/chat", chatRoutes);
+
+Sentry.setupExpressErrorHandler(app);
 
 const startServer = async () => {
   try {
