@@ -1,4 +1,4 @@
-import { generateStreamToken } from "../config/stream";
+import { generateStreamToken } from "../config/stream.js";
 
 export const getStreamToken = (req, res) => {
     try {
