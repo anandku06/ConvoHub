@@ -106,7 +106,7 @@ Feel free to check the [issues page](../../issues) or open a pull request. 🙌
 
 **Anand Kumar**
 💻 Full Stack Developer | Exploring Web, Systems & Cloud
-🌐 [Portfolio](#) · 🐙 [GitHub](https://github.com/anandku06) · 💼 [LinkedIn](#)
+🌐 [Portfolio](https://anandkumar-rho.vercel.app/) · 🐙 [GitHub](https://github.com/anandku06) · 💼 [LinkedIn](https://www.linkedin.com/in/anand-kumar-023231291/)
 
 ---
 
