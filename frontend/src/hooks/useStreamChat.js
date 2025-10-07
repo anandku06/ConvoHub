@@ -3,12 +3,12 @@ import { StreamChat } from "stream-chat";
 import { useUser } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import { getStreamToken } from "../lib/api";
-import * as Sentry from "@sentry/react"
+import * as Sentry from "@sentry/react";
 
 const streamApiKey = import.meta.env.VITE_STREAM_API_KEY;
 
-export const useSteamChat = () => {
-  const user = useUser();
+export const useStreamChat = () => {
+  const { user } = useUser();
   const [chatClient, setChatClient] = useState(null);
 
   // fetch stream token using react query
@@ -27,28 +27,29 @@ export const useSteamChat = () => {
   // initialize stream chat client
   useEffect(() => {
     const initChat = async () => {
-      if (!tokenData?.token || !user) return;
+      if (!tokenData?.token || !user || !streamApiKey) return;
+      
+      const client = StreamChat.getInstance(streamApiKey);
 
       try {
-        const client = StreamChat.getInstance(streamApiKey);
         await client.connectUser({
           id: user?.id,
-          name: user?.fullName,
-          image: user?.imageUrl,
+          name: user.fullName ?? "Unknown",
+          image: user.imageUrl ?? undefined,
         });
 
-        setChatClient(client)
+        setChatClient(client);
       } catch (error) {
-        console.log("Error connecting to stream", error)
+        console.error("Error connecting to stream", error);
 
         Sentry.captureException(error, {
-            tags : {component : "useStreamChat"},
-            extra : {
-                context : "stream_chat_connection",
-                userId : user?.id,
-                streamApiKey : streamApiKey ? "present" : "missing",
-            }
-        })
+          tags: { component: "useStreamChat" },
+          extra: {
+            context: "stream_chat_connection",
+            userId: user?.id,
+            streamApiKey: streamApiKey ? "present" : "missing",
+          },
+        });
       }
     };
 
@@ -60,12 +61,11 @@ export const useSteamChat = () => {
         chatClient.disconnectUser();
         setChatClient(null);
       }
-    }
-  }, [tokenData, user, chatClient]);
+    };
+  }, [tokenData, user]);
 
   return { chatClient, tokenLoading, tokenError };
 };
-
 
 // The useStreamChat hook initializes and manages the Stream Chat client.
 // It fetches a Stream token for the authenticated user using React Query
