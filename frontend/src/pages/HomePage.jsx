@@ -12,7 +12,7 @@ export const HomePage = () => {
   const {chatClient, tokenLoading, tokenError} = useStreamChat()
 
   // set the active channel from the URL param
-  useEffect({
+  useEffect(() => {
     if (chatClient) {
       const channelId = searchParams.get('channel')
       
