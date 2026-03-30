@@ -1,4 +1,4 @@
-import "../instrument.js"
+import "../instrument.js";
 import express from "express";
 import { ENV } from "./config/env.js";
 import { connectDB } from "./config/db.js";
@@ -7,18 +7,22 @@ import { inngest, functions } from "./config/inngest.js";
 import { serve } from "inngest/express";
 import chatRoutes from "./routes/chat.routes.js";
 import * as Sentry from "@sentry/node";
-
+import cors from "cors";
 
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Adjust this to your frontend URL
+    credentials: true, // Allow cookies to be sent with requests
+  }),
+);
 app.use(clerkMiddleware()); // Clerk middleware to handle authentication ; used to protect routes
-
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-
 
 // Inngest setup
 app.use("/api/inngest", serve({ client: inngest, functions }));
