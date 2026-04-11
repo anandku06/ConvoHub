@@ -9,7 +9,7 @@ import {
   createRoutesFromChildren,
   matchRoutes,
   useLocation,
-  useNavigationType
+  useNavigationType,
 } from "react-router";
 import App from "./App.jsx";
 import "./index.css";
@@ -25,8 +25,12 @@ Sentry.init({
       createRoutesFromChildren,
       matchRoutes,
     }),
+    Sentry.consoleLoggingIntegration({
+      levels: ["log", "info", "warn", "error"],
+    }),
   ],
   tracesSampleRate: 1.0,
+  enableLogs: true,
 });
 
 const queryClient = new QueryClient();
@@ -50,5 +54,5 @@ createRoot(document.getElementById("root")).render(
         </QueryClientProvider>
       </BrowserRouter>
     </ClerkProvider>
-  </StrictMode>
+  </StrictMode>,
 );
